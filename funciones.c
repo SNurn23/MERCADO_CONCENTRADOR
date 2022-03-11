@@ -60,42 +60,36 @@ void alquilerporfechas(){
 	   }
        printf("Anio: ");
        scanf("%d",&aniofin);
-       //if(aniofin>anioin){
-       //	aniofin;
-						//	}else{
-						////		printf("La fecha ingresada no es correcta, ingrese nuevamente\n");
-								//exit(1);
-						//	}
-							inicio=(anioin*10000+mesin*100+diain);
-							fin=(aniofin*10000+mesfin*100+diafin);
-							fread(&contrat,sizeof(contrat),1,arch);
-							while(!feof(arch)){
-								cuentasin=(contrat.fechainicio.ano*10000+contrat.fechainicio.mes*100+contrat.fechainicio.dia);
-								cuentasfin=(contrat.fechafin.ano*10000+contrat.fechafin.mes*100+contrat.fechafin.dia);
-				    /*printf("inicio=%d\n",cuentasin);
-								printf("Fin=%d\n",cuentasfin);*/
-								if((cuentasin>=inicio)&&(cuentasfin<=fin)){
-									printf("Nombre del cliente: %s\n",contrat.client.nombre);
-									printf("DNI del cliente: %ld\n",contrat.client.dni);
-									printf("El id del cliente:%d\n",contrat.client.idcliente);
-									printf("Cantidad de puestos alquilados: %d\n",contrat.client.contpuestos);
-									printf("Responsable de la firma:%s\n",contrat.responsablefirma);
-									printf("Responsable del registro:%s\n",contrat.responsableregistro);
-									printf("Fecha inicio: %d/%d/%d\n",contrat.fechainicio.dia,contrat.fechainicio.mes,contrat.fechainicio.ano);
-									printf("Fecha fin: %d/%d/%d\n",contrat.fechafin.dia,contrat.fechafin.mes,contrat.fechafin.ano);
-									printf("el ID del puesto: %d\n",contrat.idpuesto);
-									printf("Monto mensual:$%ld\n",contrat.precio);
-									printf("ID del contrato: %d\n\n\n",contrat.id);
-									bandera=1;
-								}
-								fread(&contrat,sizeof(contrat),1,arch);
-							}
-							if(bandera==0){
-								printf("********************************************************\n");
-								printf("No se encontraron contratos entre las fechas ingresadas\n");
-								printf("********************************************************\n");
-							}
-							fclose(arch);
+       inicio=(anioin*10000+mesin*100+diain);
+	   fin=(aniofin*10000+mesfin*100+diafin);
+	   fread(&contrat,sizeof(contrat),1,arch);
+	   while(!feof(arch)){
+			cuentasin=(contrat.fechainicio.ano*10000+contrat.fechainicio.mes*100+contrat.fechainicio.dia);
+			cuentasfin=(contrat.fechafin.ano*10000+contrat.fechafin.mes*100+contrat.fechafin.dia);
+			
+			if((cuentasin>=inicio)&&(cuentasfin<=fin)){
+				printf("Nombre del cliente: %s\n",contrat.client.nombre);
+				printf("DNI del cliente: %ld\n",contrat.client.dni);
+				printf("El id del cliente:%d\n",contrat.client.idcliente);
+				printf("Cantidad de puestos alquilados: %d\n",contrat.client.contpuestos);
+				printf("Responsable de la firma:%s\n",contrat.responsablefirma);
+				printf("Responsable del registro:%s\n",contrat.responsableregistro);
+				printf("Fecha inicio: %d/%d/%d\n",contrat.fechainicio.dia,contrat.fechainicio.mes,contrat.fechainicio.ano);
+				printf("Fecha fin: %d/%d/%d\n",contrat.fechafin.dia,contrat.fechafin.mes,contrat.fechafin.ano);
+			    printf("el ID del puesto: %d\n",contrat.idpuesto);
+				printf("Monto mensual:$%ld\n",contrat.precio);
+			    printf("ID del contrato: %d\n\n\n",contrat.id);
+				bandera=1;
+			}
+				fread(&contrat,sizeof(contrat),1,arch);
+		}
+		
+		if(bandera==0){
+			printf("********************************************************\n");
+			printf("No se encontraron contratos entre las fechas ingresadas\n");
+			printf("********************************************************\n");
+		}
+		fclose(arch);
 	}
 }
 
@@ -104,13 +98,13 @@ void porcentajexsector()
 	FILE *arch;
 	struct puestos puest;
 	int aux=100;
- float p=0,carnic=0,frh=0,vr=0,cul=0;
+    float p=0,carnic=0,frh=0,vr=0,cul=0;
 	char sector1[]="preelaborados";
 	char sector2[]="carnicos";
 	char sector3[]="frutihorticola";
 	char sector4[]="varios";
 	char sector5[]="actividades";
- arch=fopen("puestos.b","rb");
+	arch=fopen("puestos.b","rb");
 	if(arch!=NULL){
 		fread (&puest,sizeof(puest),1,arch);
 		while (!feof(arch)){
@@ -539,49 +533,6 @@ void modificar(int puest, int medidores){
 printf ("No funciona");
 }
 
-
- /*   int contpuestos(int idcli){
-    //Creacion de variable temporales
-    FILE *arch;         											
-    struct contratos contrat;
-    int cont=1;
-    //apertura de archivo
-    arch=fopen("contratos.b","r+b"); 
-    if(arch!=NULL){//if de comprobacion de apertura 								
-        fread(&contrat,sizeof(contrat),1,arch);
-        while(!feof(arch)){//while de recorrido de archivo
-            if(contrat.client.idcliente==idcli){
-                cont++;// este contador representa la cantidad de puestos que posee un cliente
-            }//fin if
-            fread(&contrat,sizeof(contrat),1,arch);
-        }//fin while
-        fclose(arch);
-    }
-    return(cont);
-    }
-
-void aumentarcontador(int cont , int idcli){
-    //Creacion de variable temporales
-    FILE *arch;
-    int aux=(-1);         											
-    struct contratos contrat;
-    //apertura de archivo
-    arch=fopen("contratos.b","a+b"); 
-    fseek (arch,sizeof(contrat),SEEK_SET);
-    if(arch!=NULL){//if de comprobacion de apertura 								
-        fread(&contrat,sizeof(contrat),1,arch);
-        while(!feof(arch)){
-            if(idcli==contrat.client.idcliente){
-                contrat.client.contpuestos=cont;
-                fseek (arch,sizeof(contrat)*aux,SEEK_CUR);//reposicionamiento del puntero para realizar una modificacion
-                fwrite(&contrat,sizeof(contrat),1,arch);//escritura que modifica la cantidad de puestos
-            }//fin if
-            fread(&contrat,sizeof(contrat),1,arch);
-        }//fin while
-        fclose(arch);
-    }
-}*/
-
 int incrementarcont(int idcli){
     //Creacion de variable temporales
     FILE *arch;         											
@@ -597,138 +548,10 @@ int incrementarcont(int idcli){
             }//fin if
             fread(&contrat,sizeof(contrat),1,arch);
         }//fin while
-       /* fseek(arch,sizeof(contrat),SEEK_SET);// retorno al inicio el puntero del archivo
-        fread(&contrat,sizeof(contrat),1,arch);
-        printf("El contador maximo es:%d\n",cont);
-        while(!feof(arch)){
-            if(idcli==contrat.client.idcliente){
-                fseek (arch,sizeof(contrat)*aux,SEEK_CUR);
-																contrat.client.contpuestos=cont;
-																printf("contratclient %d\n",contrat.client.contpuestos);
-																//reposicionamiento del puntero para realizar una modificacionfwrite(&contrat,sizeof(contrat),1,arch);
-																//escritura que modifica la cantidad de puestos
-            }
-            fwrite(&contrat,sizeof(contrat),1,arch);
-												//fin segundo if
-            fread(&contrat,sizeof(contrat),1,arch);
-        }//fin del segundo while*/
         fclose(arch);
        }
        return(cont);
-      }
-
- 
-/*void contratotexto(int id){
-	FILE *arch;
-	FILE *puntero;
-	int i=(-1);
-	struct contratos contrat;
-	arch=fopen("contrato.txt","at");
-	puntero=fopen("contratos.b","r+b");
-	if (arch!=NULL){
-		if(puntero!=NULL){
-			fread(&contrat,sizeof(contrat),1,puntero);
-			while (!feof(arch)){
-				while (!feof(puntero)){
-				if(contrat.id==id){
-			 fputs("CONTRATO DE ALQUILER DEL MERCADO CONCENTRADOR\n",arch);
-			 fprintf(arch,"N° de contrato: %d\n",contrat.id);
-			 fprintf(arch,"La fecha de inicio es %d/%d/%d \n",contrat.fechainicio.dia,contrat.fechainicio.mes,contrat.fechainicio.ano);
-			 fprintf(arch,"La fecha de fin es %d/%d/%d \n",contrat.fechafin.dia,contrat.fechafin.mes,contrat.fechafin.ano);
-			 fprintf(arch,"El monto mensual es de: %ld\n",contrat.precio);
-			 fprintf(arch,"El id del cliente es :%d\n",contrat.client.idcliente); 
-			 fputs("El nombre del cliente es: ",arch);
-			 fputs(contrat.client.nombre,arch);
-			 fprintf(arch,"\n");
-			 fprintf(arch,"DNI:%ld\n",contrat.client.dni);
-			 fprintf(arch,"El id del puesto es:%d\n",contrat.idpuesto);
-			 fputs("Responsable de la firma del MC :",arch);
-			 fputs(contrat.responsablefirma,arch);
-			 fprintf(arch,"\n");
-			 fputs("Responsable de la registracion:",arch);
-			 fputs(contrat.responsableregistro,arch);
-			 fprintf(arch,"El medidor es: %d\n",contrat.medidorpuest);
-			 fprintf(arch,"\n");
-			 }else{
-			printf("No se encontro el id \n");
-		}	
-			fread(&contrat,sizeof(contrat),1,puntero);
-		}
-	}
-	fclose (puntero);
-	}
-	fclose(arch);
-	}else
-	printf("No se creo el archivo contrato en texto\n");
-}*/
- 
-/*int incrementarcont(int idcli){
-    //Creacion de variable temporales
-    FILE *arch;         											
-    struct contratos contrat;
-  int cont=1,aux=(-1);
-    //apertura de archivo
-    arch=fopen("contratos.b","r+b"); 
-    if(arch!=NULL){//if de comprobacion de apertura 								
-        fread(&contrat,sizeof(contrat),1,arch);
-        while(!feof(arch)){//while de recorrido de archivo
-            if(contrat.client.idcliente==idcli){
-                cont++;// este contador representa la cantidad de puestos que posee un cliente
-            }//fin if
-            fread(&contrat,sizeof(contrat),1,arch);
-        }//fin while
-        fseek(arch,sizeof(contrat),SEEK_SET);// retorno al inicio el puntero del archivo
-        fread(&contrat,sizeof(contrat),1,arch);
-        printf("El contador maximo es:%d\n",cont);
-        while(!feof(arch)){
-            if(idcli==contrat.client.idcliente){
-                contrat.client.contpuestos=cont;
-                fseek (arch,sizeof(contrat)*aux,SEEK_CUR);//reposicionamiento del puntero para realizar una modificacion
-                fwrite(&contrat,sizeof(contrat),1,arch);//escritura que modifica la cantidad de puestos
-            }//fin segundo if
-            fread(&contrat,sizeof(contrat),1,arch);
-        }//fin del segundo while
-        fclose(arch);
-       }
-       return(cont);
-      }
-*/
- //actualiza el contador de un cliente 
- //el aux tiene bien el contador pero no actualiza bien
- /*int actualizarcont(long int dni){
- 	FILE *arch;
- 	struct contratos contrat;
- 	int aux;
- 	int i=(-1);
- 	arch=fopen("contratos.b","r+b");
- 		if(arch!=NULL){
- 			fread(&contrat,sizeof(contrat),1,arch);
- 			while(!feof(arch)){
- 				if(contrat.client.dni==dni){
- 					aux=contrat.client.contpuestos;
-					}
-					fread(&contrat,sizeof(contrat),1,arch);
-				}
-				aux++;
-				fclose(arch);
-			}
-			arch=fopen("contratos.b","r+b");
-			if (arch!=NULL){
-			fread(&contrat,sizeof(contrat),1,arch);
-			fseek(arch,sizeof(contrat)*i,SEEK_CUR);
-			while(!feof(arch)){
-				if(contrat.client.dni==dni){
-					printf("elaux es %d\n",aux);
-					contrat.client.contpuestos=aux;
-					fwrite(&contrat,sizeof(contrat),1,arch);
-				}
-				fread(&contrat,sizeof(contrat),1,arch);
-			}
-			fclose(arch);
- }
- return(aux);
-}
-*/
+    }
 
 //FUNCION QUE CREA CONTRATOS
 void crearcontrato(int puesto, long int precio){
@@ -744,53 +567,51 @@ void crearcontrato(int puesto, long int precio){
 	struct puestos puest;
 	punteromedidor=fopen("medidores.b","ab");
 	if(punteromedidor!=NULL){
-	fread(&medid,sizeof(medid),1,punteromedidor);
-	puntero = fopen ("contratos.b","ab");
-	if (puntero!=NULL){
-		printf ("Ingrese el nombre del cliente\n");
-		getchar();
-		gets (contrat.client.nombre);
-		printf ("Ingrese el dni del cliente\n");
-		scanf ("%ld",&contrat.client.dni);
-		dni=contrat.client.dni;
-		//Hay que ver si el cliente ya existia
-		printf("Alquilo un puesto anteriormente? 1)SI 2)NO \n");
-		int c;
-		scanf("%d",&c);
-		if(c==2){
-		contrat.client.idcliente=cargaridcliente();
-		contrat.client.contpuestos=cont;
-printf("El contador de puestos es: %d\n",contrat.client.contpuestos);
-		}else{
-			contrat.client.idcliente=buscarid(dni);
-			//contrat.client.contpuestos=actualizarcont(dni);
-			clienteid=contrat.client.idcliente;
-	  contrat.client.contpuestos=incrementarcont(clienteid);
-   //aumentarcontador(contrat.client.contpuestos,clienteid);
-		printf("El contador es :%d\n",contrat.client.contpuestos);
-		}
-		printf ("Ingrese el nombre del responsable de firma\n");
-		fflush(stdin);
-		gets (contrat.responsablefirma);
-		printf ("Ingrese el responsable del registro\n");
-		gets (contrat.responsableregistro);
-       printf("Ingrese la fecha de inicio del contrato\n");
-       printf("Dia: ");
-       scanf("%d",&dia);
-       if(dia<=31){
-       	contrat.fechainicio.dia=dia;
-	   }else{
-	   	printf("La fecha ingresada no es correcta, ingrese nuevamente\n");
-	   	exit (1);
-	   }
-       printf("Mes: ");
-       scanf("%d",&mes);
-       if(mes<=12){
-       	contrat.fechainicio.mes=mes;
-	   }else{
-	   	printf("La fecha ingresada no es correcta, ingrese nuevamente\n");
-	   	exit (1);
-	   }
+		fread(&medid,sizeof(medid),1,punteromedidor);
+		puntero = fopen ("contratos.b","ab");
+		if (puntero!=NULL){
+			printf ("Ingrese el nombre del cliente\n");
+			getchar();
+			gets (contrat.client.nombre);
+			printf ("Ingrese el dni del cliente\n");
+			scanf ("%ld",&contrat.client.dni);
+			dni=contrat.client.dni;
+			//Hay que ver si el cliente ya existia
+			printf("Alquilo un puesto anteriormente? 1)SI 2)NO \n");
+			int c;
+			scanf("%d",&c);
+			if(c==2){
+				contrat.client.idcliente=cargaridcliente();
+				contrat.client.contpuestos=cont;
+				printf("El contador de puestos es: %d\n",contrat.client.contpuestos);
+			}else{
+			  contrat.client.idcliente=buscarid(dni);
+			  clienteid=contrat.client.idcliente;
+			  contrat.client.contpuestos=incrementarcont(clienteid);
+			  printf("El contador es :%d\n",contrat.client.contpuestos);
+	     	}
+			printf ("Ingrese el nombre del responsable de firma\n");
+			fflush(stdin);
+			gets (contrat.responsablefirma);
+			printf ("Ingrese el responsable del registro\n");
+			gets (contrat.responsableregistro);
+	       printf("Ingrese la fecha de inicio del contrato\n");
+	       printf("Dia: ");
+	       scanf("%d",&dia);
+	       if(dia<=31){
+	       	contrat.fechainicio.dia=dia;
+		   }else{
+		   	printf("La fecha ingresada no es correcta, ingrese nuevamente\n");
+		   	exit (1);
+		   }
+	       printf("Mes: ");
+	       scanf("%d",&mes);
+	       if(mes<=12){
+	       	 contrat.fechainicio.mes=mes;
+		   }else{
+		     printf("La fecha ingresada no es correcta, ingrese nuevamente\n");
+		   	 exit (1);
+		   }
        printf("Anio: ");
        scanf("%d",&anio);
        if(anio>=2006){
